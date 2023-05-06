@@ -150,7 +150,7 @@ class Trend
 
         $placeholders = $this->getDatePeriod()->map(
             fn(Carbon $date) => new TrendValue(
-                date: verta($date)->format($this->getCarbonDateFormat()),
+                date: $date->format($this->getCarbonDateFormat()),
                 aggregate: 0,
             )
         );
