@@ -134,14 +134,14 @@ class Trend
 
     public function mapValuesToDates(Collection $values): Collection
     {
-        $values = $values->map(fn($value) => new TrendValue(
+        $values = $values->map(fn ($value) => new TrendValue(
             date: $value->{$this->dateAlias},
             aggregate: $value->aggregate,
         ));
 
         $placeholders = $this->getDatePeriod()->map(
-            fn(Carbon $date) => new TrendValue(
-                date: verta($date)->format($this->getCarbonDateFormat()),
+            fn (Carbon $date) => new TrendValue(
+                date: $date->format($this->getCarbonDateFormat()),
                 aggregate: 0,
             )
         );
