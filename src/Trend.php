@@ -23,6 +23,8 @@ class Trend
 
     public string $dateAlias = 'date';
 
+    public ?string $carbonInterval = null;
+
     public function __construct(public Builder $builder)
     {
     }
@@ -30,6 +32,13 @@ class Trend
     public static function query(Builder $builder): self
     {
         return new static($builder);
+    }
+
+    public function setCarbonInterval(string $interval): self
+    {
+        $this->carbonInterval = $interval;
+
+        return $this;
     }
 
     public static function model(string $model): self
@@ -134,13 +143,13 @@ class Trend
 
     public function mapValuesToDates(Collection $values): Collection
     {
-        $values = $values->map(fn ($value) => new TrendValue(
+        $values = $values->map(fn($value) => new TrendValue(
             date: $value->{$this->dateAlias},
             aggregate: $value->aggregate,
         ));
 
         $placeholders = $this->getDatePeriod()->map(
-            fn (Carbon $date) => new TrendValue(
+            fn(Carbon $date) => new TrendValue(
                 date: $date->format($this->getCarbonDateFormat()),
                 aggregate: 0,
             )
@@ -177,7 +186,7 @@ class Trend
 
     protected function getCarbonDateFormat(): string
     {
-        return match ($this->interval) {
+        return match ($this->carbonInterval ?: $this->interval) {
             'minute' => 'Y-m-d H:i:00',
             'hour' => 'Y-m-d H:00',
             'day' => 'Y-m-d',
